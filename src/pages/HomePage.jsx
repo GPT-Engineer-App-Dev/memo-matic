@@ -52,6 +52,7 @@ const HomePage = () => {
           <Box key={note.id} p={4} borderWidth="1px" borderRadius="md">
             <Heading size="md">{note.title}</Heading>
             <Text mt={2}>{note.content}</Text>
+            <Text mt={2} fontStyle="italic">{note.private ? "Private" : "Public"}</Text>
             <Button as={Link} to={`/edit/${note.id}`} colorScheme="blue" mt={2}>
               Edit
             </Button>
