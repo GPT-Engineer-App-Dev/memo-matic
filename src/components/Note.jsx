@@ -9,7 +9,7 @@ const Note = ({ note, onDelete }) => {
       <Button as={Link} to={`/edit/${note.id}`} colorScheme="blue" mt={2}>
         Edit
       </Button>
-      <Button colorScheme="red" mt={2} onClick={() => onDelete(note.id)}>
+      <Button colorScheme="red" mt={2} onClick={() => onDelete(note.id, { is_deleted: true })}>
         Delete
       </Button>
     </Box>

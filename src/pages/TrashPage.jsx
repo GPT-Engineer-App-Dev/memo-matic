@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Button, Heading, VStack, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const HomePage = () => {
+const TrashPage = () => {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const HomePage = () => {
 
   const fetchNotes = async () => {
     try {
-      const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes?is_deleted=eq.FALSE", {
+      const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes?is_deleted=eq.TRUE", {
         headers: {
           apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec",
           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec`,
@@ -30,38 +30,46 @@ const HomePage = () => {
     }
   };
 
-  const deleteNote = async (id) => {
+  const restoreNote = async (id) => {
     await fetch(`https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes?id=eq.${id}`, {
       method: "PATCH",
       headers: {
-        apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec`,
+        apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec",
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ is_deleted: true }),
+      body: JSON.stringify({ is_deleted: false }),
+    });
+    fetchNotes();
+  };
+
+  const permanentlyDeleteNote = async (id) => {
+    await fetch(`https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes?id=eq.${id}`, {
+      method: "DELETE",
+      headers: {
+        apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec",
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec`,
+      },
     });
     fetchNotes();
   };
 
   return (
     <Box p={4}>
-      <Heading mb={4}>Notes</Heading>
-      <Button as={Link} to="/create" colorScheme="teal" mb={4}>
-        Create Note
-      </Button>
-      <Button as={Link} to="/trash" colorScheme="red" mb={4}>
-        View Trash
+      <Heading mb={4}>Trash</Heading>
+      <Button as={Link} to="/" colorScheme="teal" mb={4}>
+        Back to Notes
       </Button>
       <VStack spacing={4} align="stretch">
         {notes.map((note) => (
           <Box key={note.id} p={4} borderWidth="1px" borderRadius="md">
             <Heading size="md">{note.title}</Heading>
             <Text mt={2}>{note.content}</Text>
-            <Button as={Link} to={`/edit/${note.id}`} colorScheme="blue" mt={2}>
-              Edit
+            <Button colorScheme="green" mt={2} onClick={() => restoreNote(note.id)}>
+              Restore
             </Button>
-            <Button colorScheme="red" mt={2} onClick={() => deleteNote(note.id)}>
-              Delete
+            <Button colorScheme="red" mt={2} onClick={() => permanentlyDeleteNote(note.id)}>
+              Permanently Delete
             </Button>
           </Box>
         ))}
@@ -70,4 +78,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default TrashPage;
