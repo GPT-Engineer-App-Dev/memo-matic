@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Heading, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, VStack, Text, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
@@ -51,6 +51,7 @@ const HomePage = () => {
         {notes.map((note) => (
           <Box key={note.id} p={4} borderWidth="1px" borderRadius="md">
             <Heading size="md">{note.title}</Heading>
+            {note.image_url && <Image src={`https://jjfebbwwtcxyhvnkuyrh.supabase.co/storage/v1/object/public/${note.image_url}`} alt={note.title} />}
             <Text mt={2}>{note.content}</Text>
             <Text mt={2} fontStyle="italic">{note.private ? "Private" : "Public"}</Text>
             <Button as={Link} to={`/edit/${note.id}`} colorScheme="blue" mt={2}>
