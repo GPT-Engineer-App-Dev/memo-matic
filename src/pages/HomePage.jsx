@@ -10,14 +10,24 @@ const HomePage = () => {
   }, []);
 
   const fetchNotes = async () => {
-    const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes", {
-      headers: {
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-      },
-    });
-    const data = await response.json();
-    setNotes(data);
+    try {
+      const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/notes", {
+        headers: {
+          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+      });
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setNotes(data);
+      } else {
+        console.error("Unexpected response format:", data);
+        setNotes([]);
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      setNotes([]);
+    }
   };
 
   const deleteNote = async (id) => {
