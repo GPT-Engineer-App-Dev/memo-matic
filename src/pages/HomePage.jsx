@@ -53,6 +53,11 @@ const HomePage = () => {
             <Heading size="md">{note.title}</Heading>
             <Text mt={2}>{note.content}</Text>
             <Text mt={2} fontStyle="italic">{note.private ? "Private" : "Public"}</Text>
+            {note.image_url && (
+              <Box mt={2}>
+                <Image src={`https://jjfebbwwtcxyhvnkuyrh.supabase.co/storage/v1/object/public/${note.image_url}`} alt={note.title} />
+              </Box>
+            )}
             <Button as={Link} to={`/edit/${note.id}`} colorScheme="blue" mt={2}>
               Edit
             </Button>
